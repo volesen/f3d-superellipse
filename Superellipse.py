@@ -1,5 +1,5 @@
-#Author-
-#Description-
+#Author-volesen
+#Description-Generates a superellipse
 
 import adsk.core, adsk.fusion, adsk.cam, traceback, math
 
@@ -8,11 +8,10 @@ def run(context):
     try:
         app = adsk.core.Application.get()
         ui  = app.userInterface
-        ui.messageBox('Hello script')
+        ui.messageBox('Generating superellipse')
 
         sketch = create_new_sketch(app)
         generate_curve_in_sketch(sketch)
-
     except:
         if ui:
             ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))
