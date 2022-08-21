@@ -10,6 +10,9 @@ def run(context):
         ui  = app.userInterface
         ui.messageBox('Hello script')
 
+        sketch = create_new_sketch(app)
+        generate_curve_in_sketch(sketch)
+
     except:
         if ui:
             ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))
@@ -29,3 +32,35 @@ def parametric_superellipse(t, a=1, b=1, n=2.5):
 
     return (x, y)
 
+
+# Fusion
+
+def create_new_sketch(app):
+    design = app.activeProduct
+
+    # Get the root component of the active design.
+    rootComp = design.rootComponent
+
+    # Create a new sketch on the xy plane.
+    sketches = rootComp.sketches
+    xyPlane = rootComp.xYConstructionPlane
+    sketch = sketches.add(xyPlane)
+
+    return sketch
+
+def generate_curve_in_sketch(sketch):
+    # Create an object collection for the points.
+    points = adsk.core.ObjectCollection.create()
+
+    t_start = 0
+    t_end = 2 * math.pi
+
+    num_points = 100
+    for i in range(num_points):
+        t = t_start + (t_end - t_start) * i / (num_points - 1)
+
+        x, y = parametric_superellipse(t)
+
+        points.add(adsk.core.Point3D.create(x, y, 0))
+    
+    sketch.sketchCurves.sketchFittedSplines.add(points)
